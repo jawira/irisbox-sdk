@@ -6,6 +6,11 @@
   <property name="irisbox.application.name" value="my-application"/>
   <property name="irisbox.form.name" value="my-form"/>
 
+
+  <target name="setup" depends="composer:validate,composer:install"/>
+  <target name="qa" depends="phpunit:check"/>
+
+
   <target name="phpunit:check" description="Run PHPUnit tests">
     <exec executable="vendor/bin/phpunit" checkreturn="true" passthru="true">
       <env key="IRISBOX_USERNAME" value="${irisbox.username}"/>
@@ -14,6 +19,21 @@
       <env key="IRISBOX_FORM_NAME" value="${irisbox.form.name}"/>
       <env key="XDEBUG_MODE" value="coverage"/>
     </exec>
+  </target>
+
+  <target name="composer:install" description="PHP dependencies">
+    <composer command="install">
+      <arg value="--no-interaction"/>
+      <arg value="--prefer-dist"/>
+      <arg value="--no-progress"/>
+      <arg value="--ansi"/>
+    </composer>
+  </target>
+
+  <target name="composer:validate" description="Validate composer.json">
+    <composer command="validate">
+      <arg value="--ansi"/>
+    </composer>
   </target>
 
   <target name="help">
