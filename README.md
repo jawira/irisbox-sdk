@@ -18,6 +18,12 @@ https://shields.io/
 - Or follow me on Twitter. 
   [![Twitter Follow](https://img.shields.io/twitter/follow/jawira?style=social)](https://twitter.com/jawira)
 
+## Testing locally
+
+```console
+phing -Dirisbox.username=username -Dirisbox.password=the-magic-key -Dirisbox.form.name=my-form -Dirisbox.application.name=my-application phpunit:check
+```
+
 ## License
 
 This library is licensed under the [MIT license](LICENSE.md).
