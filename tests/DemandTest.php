@@ -1,16 +1,16 @@
 <?php
-namespace Jawira\IrisboxClientTests;
+namespace Jawira\IrisboxSdkTests;
 
-use Jawira\IrisboxClient\DemandModel\GetDemandsBetweenDatesRequest;
-use Jawira\IrisboxClient\DemandModel\GetDemandsBetweenDatesResponse;
+use Jawira\IrisboxSdk\DemandModel\GetDemandsBetweenDatesRequest;
+use Jawira\IrisboxSdk\DemandModel\GetDemandsBetweenDatesResponse;
 use SoapFault;
 
 class DemandTest extends IrisboxCase
 {
-
   /**
-   * @covers \Jawira\IrisboxClient\DemandService::GetDemandsBetweenDates
-   * @covers \Jawira\IrisboxClient\Toolbox\IrisboxSoapClient
+   * @covers \Jawira\IrisboxSdk\AbstractService
+   * @covers \Jawira\IrisboxSdk\DemandService
+   * @covers \Jawira\IrisboxSdk\Soap\IrisboxSoapClient
    */
   public function testDemo()
   {

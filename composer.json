@@ -21,12 +21,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Jawira\\IrisboxClient\\": "src/"
+      "Jawira\\IrisboxSdk\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Jawira\\IrisboxClientTests\\": "tests/"
+      "Jawira\\IrisboxSdkTests\\": "tests/"
     }
   },
   "authors": [

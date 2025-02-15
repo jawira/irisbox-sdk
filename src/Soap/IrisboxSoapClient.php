@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Jawira\IrisboxClient\Toolbox;
+namespace Jawira\IrisboxSdk\Soap;
 
 use DOMDocument;
 use SoapClient;
