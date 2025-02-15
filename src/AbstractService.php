@@ -40,5 +40,10 @@ abstract class AbstractService
     return $this->soapClient;
   }
 
+  /**
+   * Classmap.
+   *
+   * Classmap is used by IrisboxSoapClient to map Soap responses to PHP classes.
+   */
   abstract public function getClassmap(): array;
 }

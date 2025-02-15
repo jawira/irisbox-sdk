@@ -2,10 +2,6 @@
 
 namespace Jawira\IrisboxSdk;
 
-use Jawira\IrisboxSdk\DemandModel\GetDemandsBetweenDatesRequest;
-use Jawira\IrisboxSdk\DemandModel\GetDemandsBetweenDatesResponse;
-use SoapFault;
-
 /**
  * @api
  */
@@ -15,9 +11,34 @@ class DemandService extends AbstractService
   public const PRODUCTION = 'https://irisbox.irisnet.be/irisbox/ws/backoffice/demand/irisboxBackOfficeWebService.wsdl';
 
 
-  public function GetDemandsBetweenDates(GetDemandsBetweenDatesRequest $getDemandsBetweenDatesRequest): GetDemandsBetweenDatesResponse|SoapFault
+  public function getDemandsBetweenDates(DemandModel\GetDemandsBetweenDatesRequest $request): DemandModel\GetDemandsBetweenDatesResponse
   {
-    return $this->getClient()->__soapCall(__FUNCTION__, [$getDemandsBetweenDatesRequest]);
+    return $this->getClient()->__soapCall('GetDemandsBetweenDates', [$request]);
+  }
+
+  public function getDemand(DemandModel\GetDemandRequest $request): DemandModel\GetDemandResponse
+  {
+    return $this->getClient()->__soapCall('GetDemand', [$request]);
+  }
+
+  public function getDemandsByStatus(DemandModel\GetDemandsByStatusRequest $request): DemandModel\GetDemandsByStatusResponse
+  {
+    return $this->getClient()->__soapCall('GetDemandsByStatus', [$request]);
+  }
+
+  public function getFormXsd(DemandModel\GetFormXsdRequest $request): DemandModel\GetFormXsdResponse
+  {
+    return $this->getClient()->__soapCall('GetFormXSD', [$request]);
+  }
+
+  public function setDemandInternalReference(DemandModel\SetDemandInternalReferenceRequest $request): DemandModel\SetDemandInternalReferenceResponse
+  {
+    return $this->getClient()->__soapCall('SetDemandInternalReference', [$request]);
+  }
+
+  public function setDemandStatus(DemandModel\SetDemandStatusRequest $request): DemandModel\SetDemandStatusResponse
+  {
+    return $this->getClient()->__soapCall('SetDemandStatus', [$request]);
   }
 
   public function getClassmap(): array
@@ -29,8 +50,8 @@ class DemandService extends AbstractService
       'GetDemandsBetweenDatesResponse' => DemandModel\GetDemandsBetweenDatesResponse::class,
       'GetDemandsByStatusRequest' => DemandModel\GetDemandsByStatusRequest::class,
       'GetDemandsByStatusResponse' => DemandModel\GetDemandsByStatusResponse::class,
-      'GetFormXSDRequest' => DemandModel\GetFormXSDRequest::class,
-      'GetFormXSDResponse' => DemandModel\GetFormXSDResponse::class,
+      'GetFormXSDRequest' => DemandModel\GetFormXsdRequest::class,
+      'GetFormXSDResponse' => DemandModel\GetFormXsdResponse::class,
       'SetDemandInternalReferenceRequest' => DemandModel\SetDemandInternalReferenceRequest::class,
       'SetDemandInternalReferenceResponse' => DemandModel\SetDemandInternalReferenceResponse::class,
       'SetDemandStatusRequest' => DemandModel\SetDemandStatusRequest::class,

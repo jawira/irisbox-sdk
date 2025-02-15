@@ -2,7 +2,7 @@
 
 namespace Jawira\IrisboxSdk\DemandModel;
 
-class GetFormXSDResponse
+class GetFormXsdResponse
 {
   public ?string $xsd = null;
 }
