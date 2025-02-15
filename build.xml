@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="Irisbox SDK" default="help" phingVersion="3">
+
+  <property name="irisbox.username" value="username"/>
+  <property name="irisbox.password" value="the-magic-key"/>
+  <property name="irisbox.application.name" value="my-application"/>
+  <property name="irisbox.form.name" value="my-form"/>
+
+  <target name="phpunit:check" description="Run PHPUnit tests">
+    <exec executable="vendor/bin/phpunit" checkreturn="true" passthru="true">
+      <env key="IRISBOX_USERNAME" value="${irisbox.username}"/>
+      <env key="IRISBOX_PASSWORD" value="${irisbox.password}"/>
+      <env key="IRISBOX_APPLICATION_NAME" value="${irisbox.application.name}"/>
+      <env key="IRISBOX_FORM_NAME" value="${irisbox.form.name}"/>
+      <env key="XDEBUG_MODE" value="coverage"/>
+    </exec>
+  </target>
+
+  <target name="help">
+    <uptodate property="uptodate.visualizer" srcfile="build.xml" targetfile="build.svg"/>
+    <runtarget target="map"/>
+    <open path="build.svg"/>
+  </target>
+
+  <target name="map" unless="uptodate.visualizer" description="Create buildfile map">
+    <visualizer format="svg"/>
+  </target>
+
+</project>
