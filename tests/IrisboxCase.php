@@ -1,9 +1,9 @@
 <?php
 
-namespace Jawira\IrisboxClientTests;
+namespace Jawira\IrisboxSdkTests;
 
-use Jawira\IrisboxClient\DemandModel\FormDetails;
-use Jawira\IrisboxClient\DemandService;
+use Jawira\IrisboxSdk\DemandModel\FormDetails;
+use Jawira\IrisboxSdk\DemandService;
 use PHPUnit\Framework\TestCase;
 
 abstract class IrisboxCase extends TestCase
