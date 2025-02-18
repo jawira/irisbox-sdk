@@ -12,6 +12,8 @@ class GetDemandsBetweenDatesResponse
    * - maxOccurs: 10
    * - minOccurs: 0
    * - nillable: true
+   *
+   * @return Demand[]
    */
-  public ?array $irisboxDemands = null;
+  public array $irisboxDemands = [];
 }
