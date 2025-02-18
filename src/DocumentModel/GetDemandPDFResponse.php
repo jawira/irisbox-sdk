@@ -2,17 +2,16 @@
 
 namespace Jawira\IrisboxSdk\DocumentModel;
 
+
+use Symfony\Component\Serializer\Attribute\SerializedPath;
+
 class GetDemandPDFResponse
 {
+  #[SerializedPath('[SOAP-ENV:Body][ns2:GetDemandPDFResponse][ns2:filename]')]
   public ?string $filename = null;
 
   /**
    * The demandPDF.
-   *
-   * Meta information extracted from the WSDL
-   *
-   * - expectedContentTypes: application/octet-stream
-   * - nillable: true
    */
-  public ?string $demandPDF = null;
+  public ?Attachment $demandPDF = null;
 }
