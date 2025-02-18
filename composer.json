@@ -12,7 +12,10 @@
     "php": "^8.1",
     "ext-soap": "*",
     "ext-dom": "*",
-    "wsdltophp/wssecurity": "^2"
+    "ext-curl": "*",
+    "wsdltophp/wssecurity": "^2",
+    "riverline/multipart-parser": "^2.1",
+    "symfony/serializer": "^6.4"
   },
   "require-dev": {
     "wsdltophp/packagegenerator": "^4.1.13",

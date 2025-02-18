@@ -13,9 +13,9 @@ use Jawira\IrisboxSdk\DemandModel\GetDemandsByStatusResponse;
 class DemandTest extends IrisboxCase
 {
   /**
-   * @covers \Jawira\IrisboxSdk\AbstractService
+   * @covers \Jawira\IrisboxSdk\IrisboxService
    * @covers \Jawira\IrisboxSdk\DemandService
-   * @covers \Jawira\IrisboxSdk\Soap\IrisboxSoapClient
+   * @covers \Jawira\IrisboxSdk\Soap\DemandClient
    */
   public function testGetDemandsBetweenDates()
   {
@@ -35,9 +35,9 @@ class DemandTest extends IrisboxCase
   }
 
   /**
-   * @covers \Jawira\IrisboxSdk\AbstractService
+   * @covers \Jawira\IrisboxSdk\IrisboxService
    * @covers \Jawira\IrisboxSdk\DemandService
-   * @covers \Jawira\IrisboxSdk\Soap\IrisboxSoapClient
+   * @covers \Jawira\IrisboxSdk\Soap\DemandClient
    */
   public function testGetDemand()
   {
@@ -53,9 +53,9 @@ class DemandTest extends IrisboxCase
   }
 
   /**
-   * @covers \Jawira\IrisboxSdk\AbstractService
+   * @covers \Jawira\IrisboxSdk\IrisboxService
    * @covers \Jawira\IrisboxSdk\DemandService
-   * @covers \Jawira\IrisboxSdk\Soap\IrisboxSoapClient
+   * @covers \Jawira\IrisboxSdk\Soap\DemandClient
    */
   public function testGetDemandsByStatus()
   {

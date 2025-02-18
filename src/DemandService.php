@@ -2,14 +2,17 @@
 
 namespace Jawira\IrisboxSdk;
 
+use Jawira\IrisboxSdk\Soap\DemandClient;
+
 /**
  * @api
  */
-class DemandService extends AbstractService
+class DemandService extends IrisboxService
 {
   public const STAGING = 'https://irisbox.irisnetlab.be/irisbox/ws/backoffice/demand/irisboxBackOfficeWebService.wsdl';
   public const PRODUCTION = 'https://irisbox.irisnet.be/irisbox/ws/backoffice/demand/irisboxBackOfficeWebService.wsdl';
 
+  private ?DemandClient $soapClient = null;
 
   public function getDemandsBetweenDates(DemandModel\GetDemandsBetweenDatesRequest $request): DemandModel\GetDemandsBetweenDatesResponse
   {
@@ -41,7 +44,25 @@ class DemandService extends AbstractService
     return $this->getClient()->__soapCall('SetDemandStatus', [$request]);
   }
 
-  public function getClassmap(): array
+  private function getClient()
+  {
+    if ($this->soapClient instanceof DemandClient) {
+      return $this->soapClient;
+    }
+
+    // Create client
+    $options = [
+      'trace' => true,
+      'exceptions' => true,
+    ];
+    $options['classmap'] = $this->getClassmap();
+    $this->soapClient = new DemandClient($this->wsdl, $options);
+    $this->soapClient->setCredentials($this->username, $this->password);
+
+    return $this->soapClient;
+  }
+
+  private function getClassmap(): array
   {
     return [
       'GetDemandRequest' => DemandModel\GetDemandRequest::class,
