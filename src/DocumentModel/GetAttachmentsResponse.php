@@ -2,8 +2,11 @@
 
 namespace Jawira\IrisboxSdk\DocumentModel;
 
+use Symfony\Component\Serializer\Attribute\SerializedPath;
+
 class GetAttachmentsResponse
 {
+  #[SerializedPath('[SOAP-ENV:Body][ns2:GetAttachmentsResponse][ns2:attachments]')]
   /**
    * The attachments.
    *
@@ -12,7 +15,8 @@ class GetAttachmentsResponse
    * - maxOccurs: unbounded
    * - minOccurs: 0
    *
+   *
    * @var \Jawira\IrisboxSdk\DocumentModel\Attachment[]
    */
-  public ?array $attachments = null;
+  public array $attachments = [];
 }

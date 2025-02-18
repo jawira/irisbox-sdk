@@ -7,9 +7,6 @@ use Jawira\IrisboxSdk\Soap\DocumentClient;
 
 class DocumentService extends IrisboxService
 {
-  private const STAGING_ENDPOINT = 'https://irisbox.irisnetlab.be/irisbox/ws/backoffice/demand/attachment';
-  private const PRODUCTION_ENDPOINT = 'https://irisbox.irisnet.be/irisbox/ws/backoffice/demand/attachment';
-
   public const STAGING = 'https://irisbox.irisnetlab.be/irisbox/ws/backoffice/demand/irisboxBackOfficeAttachmentWebService.wsdl';
   public const PRODUCTION = 'https://irisbox.irisnet.be/irisbox/ws/backoffice/demand/irisboxBackOfficeAttachmentWebService.wsdl';
 
@@ -17,7 +14,7 @@ class DocumentService extends IrisboxService
 
   public function getAttachments(DocumentModel\GetAttachmentsRequest $request): DocumentModel\GetAttachmentsResponse
   {
-    return $this->getClient()->getAttachments('GetAttachments', [$request]);
+    return $this->getClient()->getAttachments($request);
   }
 
   public function getDemandPdf(DocumentModel\GetDemandPDFRequest $request): DocumentModel\GetDemandPDFResponse
@@ -27,7 +24,7 @@ class DocumentService extends IrisboxService
 
   public function setDemandStatusWithAttachments(DocumentModel\SetDemandStatusWithAttachmentsRequest $request): DocumentModel\SetDemandStatusWithAttachmentsResponse
   {
-    return $this->getClient()->setDemandStatusWithAttachments('SetDemandStatusWithAttachments', [$request]);
+    throw new \RuntimeException('Not implemented');
   }
 
   private function getClient()
@@ -35,19 +32,9 @@ class DocumentService extends IrisboxService
     if ($this->soapClient instanceof DocumentClient) {
       return $this->soapClient;
     }
-    $this->soapClient = new DocumentClient();
+    $this->soapClient = new DocumentClient($this->wsdl);
     $this->soapClient->setCredentials($this->username, $this->password);
 
     return $this->soapClient;
-  }
-
-
-  private function getEndpoint(): string
-  {
-    if ($this->wsdl === self::PRODUCTION) {
-      return self::PRODUCTION_ENDPOINT;
-    }
-
-    return self::STAGING_ENDPOINT;
   }
 }
