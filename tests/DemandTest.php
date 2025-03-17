@@ -3,15 +3,35 @@
 namespace Jawira\IrisboxSdkTests;
 
 use Jawira\IrisboxSdk\DemandModel\Demand;
+use Jawira\IrisboxSdk\DemandModel\FormDetails;
 use Jawira\IrisboxSdk\DemandModel\GetDemandRequest;
 use Jawira\IrisboxSdk\DemandModel\GetDemandResponse;
 use Jawira\IrisboxSdk\DemandModel\GetDemandsBetweenDatesRequest;
 use Jawira\IrisboxSdk\DemandModel\GetDemandsBetweenDatesResponse;
 use Jawira\IrisboxSdk\DemandModel\GetDemandsByStatusRequest;
 use Jawira\IrisboxSdk\DemandModel\GetDemandsByStatusResponse;
+use Jawira\IrisboxSdk\DemandService;
+use PHPUnit\Framework\TestCase;
 
-class DemandTest extends IrisboxCase
+class DemandTest extends TestCase
 {
+  private static DemandService $demandService;
+
+  public static function setUpBeforeClass(): void
+  {
+    $username = getenv('IRISBOX_USERNAME');
+    $password = getenv('IRISBOX_PASSWORD');
+    DemandTest::$demandService = new DemandService($username, $password, DemandService::STAGING);
+  }
+
+  private function generateFormDetails(): FormDetails
+  {
+    $form = new FormDetails();
+    $form->formName = getenv('IRISBOX_FORM_NAME');
+    $form->applicationName = getenv('IRISBOX_APPLICATION_NAME');
+    return $form;
+  }
+
   /**
    * @covers \Jawira\IrisboxSdk\IrisboxService
    * @covers \Jawira\IrisboxSdk\DemandService
@@ -21,7 +41,7 @@ class DemandTest extends IrisboxCase
   {
     $request = new GetDemandsBetweenDatesRequest();
     $request->form = $this->generateFormDetails();
-    $request->startDate = '2024-05-01';
+    $request->startDate = '2024-01-01';
     $request->endDate = '2024-12-31';
     $request->version = 0;
     $request->pageNumber = 0;
@@ -29,7 +49,7 @@ class DemandTest extends IrisboxCase
     $response = self::$demandService->GetDemandsBetweenDates($request);
 
     $this->assertInstanceOf(GetDemandsBetweenDatesResponse::class, $response);
-    $this->assertCount(2, $response->irisboxDemands);
+    $this->assertCount(3, $response->irisboxDemands);
     $this->assertEquals(0, $response->currentPage);
     $this->assertEquals(0, $response->totalPages);
   }
@@ -43,13 +63,13 @@ class DemandTest extends IrisboxCase
   {
     $request = new GetDemandRequest();
     $request->form = $this->generateFormDetails();
-    $request->demandUniqueKey = '1f0c2226bf55413481fa79fd5ee4de5a85572404';
+    $request->demandUniqueKey = '2dce55af1fa84188a517a5996b778cc686929085';
 
     $response = self::$demandService->GetDemand($request);
 
     $this->assertInstanceOf(GetDemandResponse::class, $response);
     $this->assertInstanceOf(Demand::class, $response->irisboxDemand);
-    $this->assertEquals('1f0c2226bf55413481fa79fd5ee4de5a85572404', $response->irisboxDemand->uniqueKey);
+    $this->assertEquals('2dce55af1fa84188a517a5996b778cc686929085', $response->irisboxDemand->uniqueKey);
   }
 
   /**
@@ -61,8 +81,8 @@ class DemandTest extends IrisboxCase
   {
     $request = new GetDemandsByStatusRequest();
     $request->form = $this->generateFormDetails();
-    $request->startDate = '2024-05-01';
-    $request->endDate = '2024-06-30';
+    $request->startDate = '2024-01-01';
+    $request->endDate = '2024-12-31';
     $request->status = 'RECEIVED';
     $request->version = 0;
     $request->pageNumber = 0;
