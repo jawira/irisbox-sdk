@@ -37,6 +37,8 @@ use const XML_PI_NODE;
  *
  * Document server uses "Soap with Attachments" (SwA) mechanism. Since Soap
  * extension cannot handle this, a low-level implementation is needed.
+ *
+ * @link https://en.wikipedia.org/wiki/SOAP_with_Attachments
  */
 class DocumentClient implements SoapClientInterface
 {
@@ -83,9 +85,10 @@ class DocumentClient implements SoapClientInterface
   {
     $parts = $this->getStreamedParts($request);
     $parts = array_values($parts); // resetting keys
+    $attachments = new GetAttachmentsResponse(); // Default value when no attachments
 
     foreach ($parts as $key => $part) {
-      if ($part->getMimeType() === 'application/xop+xml') {
+      if ($part->getMimeType() === 'application/xop+xml') { // first element contains files data
         $body = $part->getBody();
         /** @var GetAttachmentsResponse $attachments */
         $attachments = $this->getSerializer()->deserialize($body, GetAttachmentsResponse::class, 'xml');
@@ -95,6 +98,7 @@ class DocumentClient implements SoapClientInterface
       $attachments->attachments[$key - 1]->file = $part->getBody();
     }
     unset($parts);
+    unset($key);
     unset($part);
     unset($body);
     return $attachments;
