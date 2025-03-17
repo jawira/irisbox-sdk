@@ -83,9 +83,10 @@ class DocumentClient implements SoapClientInterface
   {
     $parts = $this->getStreamedParts($request);
     $parts = array_values($parts); // resetting keys
+    $attachments = new GetAttachmentsResponse(); // Default value when no attachments
 
     foreach ($parts as $key => $part) {
-      if ($part->getMimeType() === 'application/xop+xml') {
+      if ($part->getMimeType() === 'application/xop+xml') { // first element contains files data
         $body = $part->getBody();
         /** @var GetAttachmentsResponse $attachments */
         $attachments = $this->getSerializer()->deserialize($body, GetAttachmentsResponse::class, 'xml');
@@ -95,6 +96,7 @@ class DocumentClient implements SoapClientInterface
       $attachments->attachments[$key - 1]->file = $part->getBody();
     }
     unset($parts);
+    unset($key);
     unset($part);
     unset($body);
     return $attachments;
