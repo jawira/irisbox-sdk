@@ -10,7 +10,10 @@ use Jawira\IrisboxSdk\DemandModel\GetDemandsBetweenDatesRequest;
 use Jawira\IrisboxSdk\DemandModel\GetDemandsBetweenDatesResponse;
 use Jawira\IrisboxSdk\DemandModel\GetDemandsByStatusRequest;
 use Jawira\IrisboxSdk\DemandModel\GetDemandsByStatusResponse;
+use Jawira\IrisboxSdk\DemandModel\GetFormXsdRequest;
+use Jawira\IrisboxSdk\DemandModel\GetFormXsdResponse;
 use Jawira\IrisboxSdk\DemandService;
+use PHPUnit\Event\Runtime\PHP;
 use PHPUnit\Framework\TestCase;
 
 class DemandTest extends TestCase
@@ -92,5 +95,21 @@ class DemandTest extends TestCase
     $this->assertInstanceOf(GetDemandsByStatusResponse::class, $response);
     $this->assertEquals(0, $response->currentPage);
     $this->assertEquals(0, $response->totalPages);
+  }
+
+  /**
+   * @covers \Jawira\IrisboxSdk\IrisboxService
+   * @covers \Jawira\IrisboxSdk\DemandService
+   * @covers \Jawira\IrisboxSdk\Soap\DemandClient
+   */
+  public function testGetFormXsd()
+  {
+    $request = new GetFormXsdRequest();
+    $request->form = $this->generateFormDetails();
+    $request->version = 0;
+    $response = self::$demandService->getFormXsd($request);
+
+    $this->assertInstanceOf(GetFormXsdResponse::class, $response);
+    $this->assertStringStartsWith('<xs:schema xmlns:xs', $response->xsd);
   }
 }

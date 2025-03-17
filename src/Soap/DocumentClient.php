@@ -37,6 +37,8 @@ use const XML_PI_NODE;
  *
  * Document server uses "Soap with Attachments" (SwA) mechanism. Since Soap
  * extension cannot handle this, a low-level implementation is needed.
+ *
+ * @link https://en.wikipedia.org/wiki/SOAP_with_Attachments
  */
 class DocumentClient implements SoapClientInterface
 {
