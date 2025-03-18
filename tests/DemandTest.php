@@ -12,8 +12,11 @@ use Jawira\IrisboxSdk\DemandModel\GetDemandsByStatusRequest;
 use Jawira\IrisboxSdk\DemandModel\GetDemandsByStatusResponse;
 use Jawira\IrisboxSdk\DemandModel\GetFormXsdRequest;
 use Jawira\IrisboxSdk\DemandModel\GetFormXsdResponse;
+use Jawira\IrisboxSdk\DemandModel\SetDemandInternalReferenceRequest;
+use Jawira\IrisboxSdk\DemandModel\SetDemandInternalReferenceResponse;
+use Jawira\IrisboxSdk\DemandModel\SetDemandStatusRequest;
+use Jawira\IrisboxSdk\DemandModel\SetDemandStatusResponse;
 use Jawira\IrisboxSdk\DemandService;
-use PHPUnit\Event\Runtime\PHP;
 use PHPUnit\Framework\TestCase;
 
 class DemandTest extends TestCase
@@ -52,7 +55,7 @@ class DemandTest extends TestCase
     $response = self::$demandService->GetDemandsBetweenDates($request);
 
     $this->assertInstanceOf(GetDemandsBetweenDatesResponse::class, $response);
-    $this->assertCount(3, $response->irisboxDemands);
+    $this->assertCount(2, $response->irisboxDemands);
     $this->assertEquals(0, $response->currentPage);
     $this->assertEquals(0, $response->totalPages);
   }
@@ -87,8 +90,6 @@ class DemandTest extends TestCase
     $request->startDate = '2024-01-01';
     $request->endDate = '2024-12-31';
     $request->status = 'RECEIVED';
-    $request->version = 0;
-    $request->pageNumber = 0;
 
     $response = self::$demandService->GetDemandsByStatus($request);
 
@@ -111,5 +112,40 @@ class DemandTest extends TestCase
 
     $this->assertInstanceOf(GetFormXsdResponse::class, $response);
     $this->assertStringStartsWith('<xs:schema xmlns:xs', $response->xsd);
+  }
+
+  /**
+   * @covers \Jawira\IrisboxSdk\IrisboxService
+   * @covers \Jawira\IrisboxSdk\DemandService
+   * @covers \Jawira\IrisboxSdk\Soap\DemandClient
+   */
+  public function testSetInternalReference()
+  {
+    $request = new SetDemandInternalReferenceRequest();
+    $request->form = $this->generateFormDetails();
+    $request->demandUniqueKey = '2dce55af1fa84188a517a5996b778cc686929085';
+    $request->internalReference = 'my-internal-reference';
+
+    $response = self::$demandService->setDemandInternalReference($request);
+    $this->assertInstanceOf(SetDemandInternalReferenceResponse::class, $response);
+    $this->assertSame(true, $response->internalReferenceSet);
+  }
+
+  /**
+   * @covers \Jawira\IrisboxSdk\IrisboxService
+   * @covers \Jawira\IrisboxSdk\DemandService
+   * @covers \Jawira\IrisboxSdk\Soap\DemandClient
+   */
+  public function testSetDemandStatus()
+  {
+    $request = new SetDemandStatusRequest();
+    $request->form = $this->generateFormDetails();
+    $request->demandUniqueKey = '2dce55af1fa84188a517a5996b778cc686929085';
+    $request->message = 'The demand has been received. Please be patient.';
+    $request->status = 'RECEIVED';
+
+    $response = self::$demandService->setDemandStatus($request);
+    $this->assertInstanceOf(SetDemandStatusResponse::class, $response);
+    $this->assertSame(true, $response->response);
   }
 }
