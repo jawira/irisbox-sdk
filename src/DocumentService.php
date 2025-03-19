@@ -24,7 +24,7 @@ class DocumentService extends IrisboxService
 
   public function setDemandStatusWithAttachments(DocumentModel\SetDemandStatusWithAttachmentsRequest $request): DocumentModel\SetDemandStatusWithAttachmentsResponse
   {
-    throw new \RuntimeException('Not implemented');
+    return $this->getClient()->setDemandStatusWithAttachments($request);
   }
 
   private function getClient()
