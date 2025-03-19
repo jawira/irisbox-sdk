@@ -2,7 +2,13 @@
 
 namespace Jawira\IrisboxSdk\DocumentModel;
 
+use Symfony\Component\Serializer\Attribute\SerializedPath;
+
 class SetDemandStatusWithAttachmentsResponse
 {
-  public ?bool $response = null;
+  #[SerializedPath('[SOAP-ENV:Body][ns2:SetDemandStatusWithAttachmentsResponse][ns2:response]')]
+  /**
+   * Boolean as string.
+   */
+  public ?string $response = null;
 }

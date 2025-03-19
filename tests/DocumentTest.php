@@ -4,8 +4,9 @@ namespace Jawira\IrisboxSdkTests;
 
 use Jawira\IrisboxSdk\DocumentModel;
 use Jawira\IrisboxSdk\DocumentService;
-use PHPUnit\Event\Runtime\PHP;
 use PHPUnit\Framework\TestCase;
+use function base64_encode;
+use function file_get_contents;
 
 class DocumentTest extends TestCase
 {
@@ -60,5 +61,29 @@ class DocumentTest extends TestCase
     $this->assertInstanceOf(DocumentModel\GetAttachmentsResponse::class, $response);
     $this->assertIsArray($response->attachments);
     $this->assertSame(1, count($response->attachments));
+  }
+
+  /**
+   * @covers \Jawira\IrisboxSdk\IrisboxService
+   * @covers \Jawira\IrisboxSdk\DocumentService
+   * @covers \Jawira\IrisboxSdk\Soap\DocumentClient
+   */
+  public function testSetDemandStatusWithAttachmentsRequest()
+  {
+    $attachment = new DocumentModel\Attachment();
+    $attachment->filename = 'jawira-phpunit.pdf';
+    $attachment->mediaType = 'application/pdf';
+    $attachment->file = base64_encode(file_get_contents(__DIR__ . '/../resources/jawira.pdf'));
+
+    $request = new DocumentModel\SetDemandStatusWithAttachmentsRequest();
+    $request->form = $this->generateFormDetails();
+    $request->demandUniqueKey = '2dce55af1fa84188a517a5996b778cc686929085';
+    $request->status = 'RECEIVED';
+    $request->attachments = [$attachment];
+
+    $response = self::$documentService->setDemandStatusWithAttachments($request);
+
+    $this->assertInstanceOf(DocumentModel\SetDemandStatusWithAttachmentsResponse::class, $response);
+    $this->assertSame('true', $response->response);
   }
 }

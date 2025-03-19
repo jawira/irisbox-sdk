@@ -9,6 +9,8 @@ use Jawira\IrisboxSdk\DocumentModel\GetAttachmentsRequest;
 use Jawira\IrisboxSdk\DocumentModel\GetAttachmentsResponse;
 use Jawira\IrisboxSdk\DocumentModel\GetDemandPDFRequest;
 use Jawira\IrisboxSdk\DocumentModel\GetDemandPDFResponse;
+use Jawira\IrisboxSdk\DocumentModel\SetDemandStatusWithAttachmentsRequest;
+use Jawira\IrisboxSdk\DocumentModel\SetDemandStatusWithAttachmentsResponse;
 use Riverline\MultiPartParser\StreamedPart;
 use RuntimeException;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
@@ -30,6 +32,7 @@ use function is_string;
 use function Jawira\TheLostFunctions\get_short_class;
 use function preg_replace;
 use function sprintf;
+use function str_replace;
 use const XML_PI_NODE;
 
 /**
@@ -62,7 +65,7 @@ class DocumentClient implements SoapClientInterface
 
   public function getDemandPdf(GetDemandPDFRequest $request): GetDemandPDFResponse
   {
-    $parts = $this->getStreamedParts($request);
+    $parts = $this->sendRequestToIrisbox($request);
 
     foreach ($parts as $part) {
       if ($part->getMimeType() === 'application/xop+xml') {
@@ -83,7 +86,8 @@ class DocumentClient implements SoapClientInterface
 
   public function getAttachments(GetAttachmentsRequest $request): GetAttachmentsResponse
   {
-    $parts = $this->getStreamedParts($request);
+    $parts = $this->sendRequestToIrisbox($request);
+
     $parts = array_values($parts); // resetting keys
     $attachments = new GetAttachmentsResponse(); // Default value when no attachments
 
@@ -104,7 +108,18 @@ class DocumentClient implements SoapClientInterface
     return $attachments;
   }
 
+  public function setDemandStatusWithAttachments(SetDemandStatusWithAttachmentsRequest $request): SetDemandStatusWithAttachmentsResponse
+  {
+    $parts = $this->sendRequestToIrisbox($request);
+    $firstPart = reset($parts);
+    return $this->getSerializer()->deserialize($firstPart->getBody(), SetDemandStatusWithAttachmentsResponse::class, 'xml');
+  }
+
   /**
+   * Will return part of MultiPart response.
+   *
+   * If response is not multipart then an empty array is returned.
+   *
    * @return \Riverline\MultiPartParser\StreamedPart[]
    */
   private function extractParts(string $data): array
@@ -116,15 +131,15 @@ class DocumentClient implements SoapClientInterface
     $document = new StreamedPart($stream);
     fclose($stream);
     unset($stream);
-    if ($document->isMultiPart()) {
-      return $document->getParts();
-    }
-
-    return [];
+    return $document->isMultiPart() ? $document->getParts() : [];
   }
 
   private function prepareEnvelope(string $soapBody): string
   {
+    /** Removing ns2: namespace, required by {@see Attachment}. */
+    $soapBody = str_replace(['<ns2:', '</ns2:',], ['<', '</'], $soapBody);
+
+    // Adding v1: namespace
     $soapBody = preg_replace('#<\b#', '<v1:', $soapBody);
     $soapBody = preg_replace('#</\b#', '</v1:', $soapBody);
     $template = <<<'XML'
@@ -148,7 +163,12 @@ class DocumentClient implements SoapClientInterface
     return sprintf($template, $this->username, $this->password, $soapBody);
   }
 
-  private function doRequest(string $soapEnvelop, string $url): string
+  /**
+   * Send request to Irisbox.
+   *
+   * Response will include HTTP headers, required by SwA {@see https://en.wikipedia.org/wiki/SOAP_with_Attachments}.
+   */
+  private function sendHttpRequest(string $soapEnvelop, string $url): string
   {
     $curlHandle = curl_init();
     curl_setopt($curlHandle, CURLOPT_URL, $url);
@@ -205,10 +225,7 @@ class DocumentClient implements SoapClientInterface
     return $result->item(0)->textContent;
   }
 
-  /**
-   * @return StreamedPart[]
-   */
-  private function getStreamedParts(GetDemandPDFRequest|GetAttachmentsRequest $request): array
+  private function sendRequestToIrisbox(GetDemandPDFRequest|GetAttachmentsRequest|SetDemandStatusWithAttachmentsRequest $request): array
   {
     $context = [
       'xml_standalone' => false,
@@ -218,7 +235,7 @@ class DocumentClient implements SoapClientInterface
     ];
     $body = $this->getSerializer()->serialize($request, 'xml', $context);
     $envelope = $this->prepareEnvelope($body);
-    $soapResponse = $this->doRequest($envelope, $this->getLocation());
+    $soapResponse = $this->sendHttpRequest($envelope, $this->getLocation());
     return $this->extractParts($soapResponse);
   }
 }
