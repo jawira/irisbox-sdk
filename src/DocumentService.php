@@ -2,7 +2,6 @@
 
 namespace Jawira\IrisboxSdk;
 
-use Jawira\IrisboxSdk\Soap\DemandClient;
 use Jawira\IrisboxSdk\Soap\DocumentClient;
 
 class DocumentService extends IrisboxService
