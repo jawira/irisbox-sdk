@@ -29,7 +29,7 @@ use Jawira\IrisboxSdk\DemandModel\GetDemandsBetweenDatesRequest;
 use Jawira\IrisboxSdk\DemandService;
 
 // Instantiate service
-$demandService = new DemandService('my-username', 'the-magic-key', DemandService::STAGING);
+$demandService = new DemandService('my-username', 'my-password', DemandService::STAGING);
 
 // Prepare DTOs
 $form = new FormDetails();
@@ -38,7 +38,7 @@ $form->applicationName = 'MY_APPLICATION';
 $request = new GetDemandsBetweenDatesRequest();
 $request->form = $form;
 $request->startDate = '2025-01-01';
-$request->endDate = '2025-06-31';
+$request->endDate = '2025-06-27';
 $request->version = 0;
 $request->pageNumber = 0;
 
