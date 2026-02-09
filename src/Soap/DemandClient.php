@@ -27,10 +27,10 @@ class DemandClient extends SoapClient implements SoapClientInterface
   /**
    * Send Soap request.
    */
-  public function __doRequest($request, $location, $action, $version, bool $oneWay = false): ?string
+  public function __doRequest($request, $location, $action, $version, bool $oneWay = false, ?string $uriParserClass = null): ?string
   {
     $xml = $this->fixRequestNamespace($request);
-    return parent::__doRequest($xml, $location, $action, $version, $oneWay);
+    return parent::__doRequest($xml, $location, $action, $version, $oneWay, $uriParserClass);
   }
 
   /**
