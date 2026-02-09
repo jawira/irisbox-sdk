@@ -15,10 +15,10 @@
     "ext-curl": "*",
     "wsdltophp/wssecurity": "^2",
     "riverline/multipart-parser": "^2.1",
-    "symfony/serializer": "^6.4 || ^7.0",
-    "symfony/property-info": "^6.4 || ^7.0",
-    "symfony/property-access": "^6.4 || ^7.0",
-    "phpdocumentor/reflection-docblock": "^5.6",
+    "symfony/serializer": "^6.4 || ^7.0 || ^8.0",
+    "symfony/property-info": "^6.4 || ^7.0 || ^8.0",
+    "symfony/property-access": "^6.4 || ^7.0 || ^8.0",
+    "phpdocumentor/reflection-docblock": "^5.6 || ^6.0",
     "jawira/the-lost-functions": "^1.7"
   },
   "require-dev": {
