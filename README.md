@@ -5,21 +5,32 @@
 ![Packagist License](https://img.shields.io/packagist/l/jawira/irisbox-sdk)
 ![Packagist Downloads](https://img.shields.io/packagist/dt/jawira/irisbox-sdk)
 
-**This library provides two services to download data and files from [IRISbox e-admnistration](https://irisbox.irisnet.be/).** 
+**This library provides two services to download data and files from [IRISbox e-administration](https://irisbox.irisnet.be/).** 
 
-1. `\Jawira\IrisboxSdk\DemandService` 
+1. `\Jawira\IrisboxSdk\DemandService` - to search and get demand data.
    * `getDemandsBetweenDates()`
    * `getDemand()`
    * `getDemandsByStatus()`
    * `getFormXsd()`
    * `setDemandInternalReference()`
    * `setDemandStatus()`
-2. `\Jawira\IrisboxSdk\DocumentService`
+2. `\Jawira\IrisboxSdk\DocumentService` - to download attachments.
    * `getAttachments()` 
    * `getDemandPdf()` 
    * `setDemandStatusWithAttachments()` 
 
+Staging and Production WSDL are provided as constants:
+
+```php
+\Jawira\IrisboxSdk\DemandService::STAGING
+\Jawira\IrisboxSdk\DemandService::PRODUCTION
+\Jawira\IrisboxSdk\DocumentService::STAGING
+\Jawira\IrisboxSdk\DocumentService::PRODUCTION
+```
+
 ## Usage
+
+Search all demands between two dates:
 
 ```php
 <?php
@@ -28,10 +39,10 @@ use Jawira\IrisboxSdk\DemandModel\FormDetails;
 use Jawira\IrisboxSdk\DemandModel\GetDemandsBetweenDatesRequest;
 use Jawira\IrisboxSdk\DemandService;
 
-// Instantiate service
+// 1. Instantiate service
 $demandService = new DemandService('my-username', 'my-password', DemandService::STAGING);
 
-// Prepare DTOs
+// 2. Prepare DTOs
 $form = new FormDetails();
 $form->formName = 'MY_FORM';
 $form->applicationName = 'MY_APPLICATION';
@@ -42,10 +53,10 @@ $request->endDate = '2025-06-27';
 $request->version = 0;
 $request->pageNumber = 0;
 
-// Send request
+// 3. Send request
 $response = $demandService->getDemandsBetweenDates($request);
 
-// Print IDs from response
+// 4. Print IDs from response
 foreach ($response->irisboxDemands as $demand) {
   echo $demand->uniqueKey;
 }

@@ -2,6 +2,7 @@
 
 namespace Jawira\IrisboxSdk;
 
+use Jawira\IrisboxSdk\DemandModel\Demand;
 use Jawira\IrisboxSdk\Soap\DemandClient;
 
 /**
@@ -14,6 +15,14 @@ class DemandService extends IrisboxService
 
   private ?DemandClient $soapClient = null;
 
+  /**
+   * Fetch all Demands between two dates.
+   *
+   * This method will only return demands with `SENT` status.
+   * When {@see Demand} status is changed, this method will not return that {@see Demand} anymore.
+   *
+   * Use {@see DemandService::setDemandStatus} to change Demand status.
+   */
   public function getDemandsBetweenDates(DemandModel\GetDemandsBetweenDatesRequest $request): DemandModel\GetDemandsBetweenDatesResponse
   {
     return $this->getClient()->__soapCall('GetDemandsBetweenDates', [$request]);
